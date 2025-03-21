@@ -4,7 +4,8 @@ import Network from "gi://AstalNetwork";
 
 const time = Variable("").poll(1000, "date");
 
-function WirelessNetwork(network: Network): JSX.Element {
+function WirelessNetwork(): JSX.Element {
+  const network = Network.get_default();
   const wifi = bind(network, "wifi");
 
   return (
@@ -23,22 +24,15 @@ function WirelessNetwork(network: Network): JSX.Element {
   );
 }
 
-function WiredNetwork(network: Network): JSX.Element {
+function WiredNetwork(): JSX.Element {
+  const network = Network.get_default();
   const wired = bind(network, "wired");
 
   return (
-    <box visible={wired.as(Boolean)}>
-      {wired.as(
-        (wired) =>
-          wired && (
-            <icon
-              className="Wired"
-              icon={bind(wired, "iconName")}
-            />
-          )
-      )}
+    <box>
+      {wired.as((wired) => wired && <icon icon={bind(wired, "iconName")} />)}
     </box>
-  )
+  );
 }
 
 export default function Bar(monitor: number) {
@@ -56,9 +50,10 @@ export default function Bar(monitor: number) {
         <button onClicked="echo hello" halign={Gtk.Align.CENTER}>
           Welcome to AGS!
         </button>
-        <eventbox>
+        <box>
           <WiredNetwork />
-        </eventbox>
+          <WirelessNetwork />
+        </box>
         <button onClicked={() => print("hello")} halign={Gtk.Align.CENTER}>
           <label label={time()} />
         </button>
